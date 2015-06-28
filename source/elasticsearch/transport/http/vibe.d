@@ -43,6 +43,7 @@ override:
                     (scope req) {
             req.method = vibeTransportRequestMethod(method);
             if (requestBody != "") {
+                //Maybe a better way to handle this
                 if (parameters.get("bulk",null)){
                     req.writeBody(cast(ubyte[])requestBody, "application/json");
                 }

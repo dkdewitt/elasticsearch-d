@@ -45,38 +45,6 @@ Response index(Client client, string indexName, string type, string requestBody,
     return index(client, p);
 }
 
-Response bulkIndex(Client client, Parameters arguments = Parameters()) {
-    RequestMethod method;
-
-    arguments.enforceParameter("index");
-    arguments.enforceParameter("type");
-
-    auto requestBody = arguments["body"];
-    auto params = arguments.validateAndExtract(
-        "consistency", "op_type", "parent", "percolate", "refresh", "replication", "routing",
-        "timeout", "timestamp", "ttl", "version", "version_type","bulk"
-    );
-    string[] path = [arguments["index"], arguments["type"],"_bulk"];
-
-    if (arguments.hasField("id")) {
-        method = RequestMethod.PUT;
-        path ~= arguments["id"];
-    }
-    else {
-        method = RequestMethod.POST;
-    }
-
-    return client.performRequest(method, esPathify(path), params, requestBody);
-}
-
-Response bulkIndex(Client client, string indexName, string type, string requestBody, Parameters p = Parameters()) {
-    p["index"] = indexName;
-    p["type"] = type;
-    p["body"] = requestBody;
-    p["bulk"] = "true";
-    return bulkIndex(client, p);
-}
-
 Response search(Client client, Parameters arguments = Parameters()) {
     string index = arguments.hasField("index") ? arguments["index"] : "_all";
     string type = arguments.hasField("type") ? arguments["type"] : "";
